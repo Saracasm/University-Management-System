@@ -1,0 +1,130 @@
+@model WP_project.Models.Enrollment
+
+@{
+    ViewData["Title"] = "Course Details";
+    var attendance = ViewBag.Attendance as List<WP_project.Models.Attendance>;
+}
+
+<div class="container">
+    <h1>@Model.CourseOffering.Course.Code - @Model.CourseOffering.Course.Title</h1>
+    <h4>@Model.CourseOffering.Instructor.Name</h4>
+    <hr />
+
+    <div class="row">
+        <!-- Grades Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Academic Performance</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Component</th>
+                            <th>Score (100)</th>
+                            <th>Weight</th>
+                            <th>Weighted Score</th>
+                        </tr>
+                        <tr>
+                            <td>Assignments</td>
+                            <td>@(Model.AssignmentScore ?? 0)</td>
+                            <td>10%</td>
+                            <td>@((Model.AssignmentScore ?? 0) * 0.1)</td>
+                        </tr>
+                        <tr>
+                            <td>Quizzes</td>
+                            <td>@(Model.QuizScore ?? 0)</td>
+                            <td>10%</td>
+                            <td>@((Model.QuizScore ?? 0) * 0.1)</td>
+                        </tr>
+                        <tr>
+                            <td>Project</td>
+                            <td>@(Model.ProjectScore ?? 0)</td>
+                            <td>10%</td>
+                            <td>@((Model.ProjectScore ?? 0) * 0.1)</td>
+                        </tr>
+                        <tr>
+                            <td>Mid Exam</td>
+                            <td>@(Model.MidScore ?? 0)</td>
+                            <td>20%</td>
+                            <td>@((Model.MidScore ?? 0) * 0.2)</td>
+                        </tr>
+                        <tr>
+                            <td>Final Exam</td>
+                            <td>@(Model.FinalScore ?? 0)</td>
+                            <td>50%</td>
+                            <td>@((Model.FinalScore ?? 0) * 0.5)</td>
+                        </tr>
+                        <tr class="table-active fw-bold">
+                            <td colspan="3">Total</td>
+                            <td>@(Model.TotalScore ?? 0)</td>
+                        </tr>
+                        <tr class="table-success fw-bold">
+                            <td colspan="3">Final Grade</td>
+                            <td>@(Model.Grade ?? "-")</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Attendance Record</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h2>@ViewBag.AttendancePercentage%</h2>
+                        <p class="text-muted">
+                            Present: @ViewBag.PresentCount / @ViewBag.TotalClasses Classes
+                        </p>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @ViewBag.AttendancePercentage%"></div>
+                        </div>
+                    </div>
+
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (attendance != null && attendance.Any())
+                                {
+                                    @foreach (var record in attendance)
+                                    {
+                                        <tr>
+                                            <td>@record.Date.ToLocalTime().ToShortDateString()</td>
+                                            <td>
+                                                @if (record.IsPresent)
+                                                {
+                                                    <span class="badge bg-success">Present</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Absent</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="2" class="text-muted text-center">No attendance records found.</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <a asp-action="Index" class="btn btn-secondary mt-3">Back to My Schedule</a>
+</div>
+

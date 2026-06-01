@@ -1,0 +1,242 @@
+﻿@model WP_project.Controllers.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="dashboard-header mb-4">
+        <h1 class="display-4 mb-2">Welcome back, @Model.UserName!</h1>
+        <p class="lead" style="color: var(--text-muted);">Here's your overview</p>
+    </div>
+
+    <div class="row g-4">
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">👥</div>
+                        <div class="stat-value">@Model.TotalUsers</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">📚</div>
+                        <div class="stat-value">@Model.TotalDepartments</div>
+                        <div class="stat-label">Departments</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">📖</div>
+                        <div class="stat-value">@Model.TotalCourses</div>
+                        <div class="stat-label">Courses</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Admin Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">Name:</span>
+                                    <span class="info-value">@Model.UserName</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value">@Model.Email</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">Role:</span>
+                                    <span class="info-value badge bg-primary">@Model.Role</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (User.IsInRole("Student"))
+        {
+            <div class="col-md-6">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">📊</div>
+                        <div class="stat-value">@Model.CGPA.ToString("F2")</div>
+                        <div class="stat-label">CGPA</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">📋</div>
+                        <div class="stat-value">@Model.EnrolledCourses</div>
+                        <div class="stat-label">Enrolled Courses</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Student Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">Name:</span>
+                                    <span class="info-value">@(Model.StudentName ?? Model.UserName)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Roll Number:</span>
+                                    <span class="info-value">@(Model.RollNumber ?? "N/A")</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value">@Model.Email</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">Department:</span>
+                                    <span class="info-value">@(Model.DepartmentName ?? "N/A")</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Total Credits:</span>
+                                    <span class="info-value">@Model.TotalCredits</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Role:</span>
+                                    <span class="info-value badge bg-primary">@Model.Role</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (User.IsInRole("Faculty"))
+        {
+            <div class="col-md-6">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">👨‍🏫</div>
+                        <div class="stat-value">@Model.TotalClasses</div>
+                        <div class="stat-label">Total Classes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Faculty Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">Name:</span>
+                                    <span class="info-value">@(Model.FacultyName ?? Model.UserName)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value">@Model.Email</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label">Department:</span>
+                                    <span class="info-value">@(Model.DepartmentName ?? "N/A")</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Role:</span>
+                                    <span class="info-value badge bg-primary">@Model.Role</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card glass-effect" style="max-width: 600px; margin: 0 auto;">
+        <div class="card-body text-center py-5 px-4">
+            <div class="mb-4" style="font-size: 4rem;">🎓</div>
+            <h2 class="mb-4 gradient-text" style="font-size: 2rem; font-weight: 700;">Get Started</h2>
+            <p class="lead mb-5" style="color: var(--text-muted); font-size: 1.1rem;">Please log in to access your portal</p>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg px-5">Login</a>
+        </div>
+    </div>
+}
+
+<style>
+    .stat-card {
+        text-align: center;
+    }
+    
+    .stat-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1rem;
+    }
+    
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+    
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--dark-border);
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+    
+    .info-value {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+</style>

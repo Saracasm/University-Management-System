@@ -1,0 +1,114 @@
+@using Microsoft.AspNetCore.Identity
+@using WP_project.Models
+@inject UserManager<ApplicationUser> UserManager
+
+@if (User.Identity.IsAuthenticated)
+{
+    var currentUser = await UserManager.GetUserAsync(User);
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <h3>University Portal</h3>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span>👤</span>
+                    }
+                    else if (User.IsInRole("Student"))
+                    {
+                        <span>🎓</span>
+                    }
+                    else if (User.IsInRole("Faculty"))
+                    {
+                        <span>👨‍🏫</span>
+                    }
+                </div>
+                <div class="user-info">
+                    <div class="user-name">@User.Identity?.Name</div>
+                    <div class="user-role">@(User.IsInRole("Admin") ? "Administrator" : User.IsInRole("Student") ? "Student" : "Faculty")</div>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-section">
+                        <div class="nav-section-title">Administration</div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Departments" ? "active" : "")" asp-controller="Departments" asp-action="Index">
+                            <span class="nav-icon">📚</span>
+                            <span class="nav-text">Departments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Courses" ? "active" : "")" asp-controller="Courses" asp-action="Index">
+                            <span class="nav-icon">📖</span>
+                            <span class="nav-text">Courses</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Semesters" ? "active" : "")" asp-controller="Semesters" asp-action="Index">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">Semesters</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "CourseOfferings" ? "active" : "")" asp-controller="CourseOfferings" asp-action="Index">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-text">Course Offerings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" asp-controller="Admin" asp-action="Users">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-text">Users</span>
+                        </a>
+                    </li>
+                }
+                else if (User.IsInRole("Student"))
+                {
+                    <li class="nav-section">
+                        <div class="nav-section-title">Academic</div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Student" ? "active" : "")" asp-controller="Student" asp-action="Index">
+                            <span class="nav-icon">📋</span>
+                            <span class="nav-text">My Schedule</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Transcript" ? "active" : "")" asp-controller="Transcript" asp-action="Index">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Transcript</span>
+                        </a>
+                    </li>
+                }
+                else if (User.IsInRole("Faculty"))
+                {
+                    <li class="nav-section">
+                        <div class="nav-section-title">Teaching</div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Faculty" ? "active" : "")" asp-controller="Faculty" asp-action="Index">
+                            <span class="nav-icon">👨‍🏫</span>
+                            <span class="nav-text">My Classes</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}
+

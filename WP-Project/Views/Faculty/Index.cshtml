@@ -1,0 +1,49 @@
+@model IEnumerable<WP_project.Models.CourseOffering>
+
+@{
+    ViewData["Title"] = "My Courses";
+}
+
+<div class="page-header mb-4">
+    <h1 class="mb-2">My Assigned Courses</h1>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Course</th>
+                        <th>Section</th>
+                        <th>Enrolled Students</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@item.Semester.Name</td>
+                            <td class="align-middle">
+                                <strong>@item.Course.Code</strong> - @item.Course.Title
+                            </td>
+                            <td class="align-middle">
+                                <span class="badge bg-primary">@item.Section</span>
+                            </td>
+                            <td class="align-middle">@item.Enrollments.Count / @item.Capacity</td>
+                            <td class="align-middle">
+                                <div class="d-flex gap-2">
+                                    <a asp-action="ManageGrades" asp-route-id="@item.CourseOfferingId" class="btn btn-sm btn-primary">Grades</a>
+                                    <a asp-action="Attendance" asp-route-id="@item.CourseOfferingId" class="btn btn-sm btn-primary">Attendance</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

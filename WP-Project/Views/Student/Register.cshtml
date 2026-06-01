@@ -1,0 +1,64 @@
+@model IEnumerable<WP_project.Models.CourseOffering>
+
+@{
+    ViewData["Title"] = "Register for Classes";
+    var enrolledIds = ViewBag.EnrolledIds as List<int> ?? new List<int>();
+}
+
+<h1>Available Classes</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<p>
+    <a asp-action="Index" class="btn btn-secondary">Back to My Schedule</a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Semester</th>
+            <th>Section</th>
+            <th>Instructor</th>
+            <th>Capacity</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            bool isEnrolled = enrolledIds.Contains(item.CourseOfferingId);
+            
+            <tr>
+                <td>
+                    <strong>@item.Course.Code</strong> - @item.Course.Title<br/>
+                    <small class="text-muted">Credits: @item.Course.Credits</small>
+                </td>
+                <td>@item.Semester.Name</td>
+                <td>@item.Section</td>
+                <td>@item.Instructor.Name</td>
+                <td>@item.Capacity</td>
+                <td>
+                    @if (isEnrolled)
+                    {
+                        <button class="btn btn-sm btn-success" disabled>Enrolled</button>
+                    }
+                    else
+                    {
+                        <form asp-action="Enroll" method="post">
+                            <input type="hidden" name="courseOfferingId" value="@item.CourseOfferingId" />
+                            <button type="submit" class="btn btn-sm btn-primary">Enroll</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

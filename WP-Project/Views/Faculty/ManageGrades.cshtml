@@ -1,0 +1,85 @@
+@model WP_project.Models.CourseOffering
+
+@{
+    ViewData["Title"] = "Manage Grades";
+}
+
+<div class="page-header mb-4">
+    <h1 class="mb-2">Grade Entry: @Model.Course.Code</h1>
+    <p class="lead" style="color: var(--text-muted);">@Model.Course.Title (@Model.Semester.Name)</p>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary mb-4">Back to Courses</a>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="align-middle">Roll No</th>
+                        <th rowspan="2" class="align-middle">Student</th>
+                        <th class="text-center">Assign</th>
+                        <th class="text-center">Quiz</th>
+                        <th class="text-center">Project</th>
+                        <th class="text-center">Mid</th>
+                        <th class="text-center">Final</th>
+                        <th rowspan="2" class="align-middle text-center">Total</th>
+                        <th rowspan="2" class="align-middle text-center">Grade</th>
+                        <th rowspan="2" class="align-middle">Action</th>
+                    </tr>
+                    <tr class="text-center" style="font-size: 0.75rem; color: var(--text-muted);">
+                        <th>10%</th>
+                        <th>10%</th>
+                        <th>10%</th>
+                        <th>20%</th>
+                        <th>50%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model.Enrollments)
+                    {
+                        <tr>
+                            <form asp-action="UpdateGrade" method="post">
+                                <input type="hidden" name="enrollmentStudentId" value="@e.StudentId" />
+                                <input type="hidden" name="enrollmentCourseOfferingId" value="@e.CourseOfferingId" />
+                                
+                                <td class="align-middle">@e.Student.RollNumber</td>
+                                <td class="align-middle">@e.Student.Name</td>
+                                
+                                <td>
+                                    <input type="number" step="0.1" name="assign" value="@e.AssignmentScore" class="form-control form-control-sm" min="0" max="100" style="width: 80px; margin: 0 auto;" />
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="quiz" value="@e.QuizScore" class="form-control form-control-sm" min="0" max="100" style="width: 80px; margin: 0 auto;" />
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="project" value="@e.ProjectScore" class="form-control form-control-sm" min="0" max="100" style="width: 80px; margin: 0 auto;" />
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="mid" value="@e.MidScore" class="form-control form-control-sm" min="0" max="100" style="width: 80px; margin: 0 auto;" />
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="final" value="@e.FinalScore" class="form-control form-control-sm" min="0" max="100" style="width: 80px; margin: 0 auto;" />
+                                </td>
+                                
+                                <td class="align-middle text-center">
+                                    <strong style="font-size: 1.1rem;">@(e.TotalScore?.ToString("F1") ?? "0.0")</strong>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="badge @(e.Grade == "F" ? "bg-danger" : "bg-success")" style="font-size: 1rem; padding: 0.5rem 0.75rem;">
+                                        @(e.Grade ?? "-")
+                                    </span>
+                                </td>
+                                
+                                <td class="align-middle">
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </td>
+                            </form>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

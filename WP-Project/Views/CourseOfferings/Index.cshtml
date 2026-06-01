@@ -1,0 +1,40 @@
+@model IEnumerable<WP_project.Models.CourseOffering>
+
+@{
+    ViewData["Title"] = "Course Offerings";
+}
+
+<h1>Course Offerings</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Schedule New Class</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Semester</th>
+            <th>Course Code</th>
+            <th>Title</th>
+            <th>Section</th>
+            <th>Instructor</th>
+            <th>Capacity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Semester.Name</td>
+            <td>@item.Course.Code</td>
+            <td>@item.Course.Title</td>
+            <td>@item.Section</td>
+            <td>@item.Instructor.Name</td>
+            <td>@item.Capacity</td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.CourseOfferingId" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+

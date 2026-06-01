@@ -1,0 +1,79 @@
+@model IEnumerable<WP_project.Models.Enrollment>
+
+@{
+    ViewData["Title"] = "My Schedule";
+}
+
+<h1>My Schedule</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<p>
+    <a asp-action="Register" class="btn btn-primary">Register for Classes</a>
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <p class="text-muted">You are not enrolled in any classes yet.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Course</th>
+                        <th>Section</th>
+                        <th>Instructor</th>
+                        <th>Grade</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.CourseOffering.Semester.Name</td>
+                            <td>
+                                <strong>@item.CourseOffering.Course.Code</strong><br />
+                                <small>@item.CourseOffering.Course.Title</small>
+                            </td>
+                            <td>@item.CourseOffering.Section</td>
+                            <td>@item.CourseOffering.Instructor.Name</td>
+                            <td>
+                                @if (item.Grade == null)
+                                {
+                                    <span class="text-muted">In Progress</span>
+                                }
+                                else
+                                {
+                                    <span class="fw-bold">@item.Grade</span>
+                                    <small class="d-block text-muted">(@(item.TotalScore ?? 0)%)</small>
+                                }
+                                <a asp-action="Details" asp-route-id="@item.CourseOfferingId" class="btn btn-sm btn-link p-0">Details</a>
+                            </td>
+                            <td>
+                                @if (string.IsNullOrEmpty(item.Grade))
+                                {
+                                    <form asp-action="Drop" method="post" onsubmit="return confirm('Are you sure you want to drop this course?');">
+                                        <input type="hidden" name="courseOfferingId" value="@item.CourseOfferingId" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Drop</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+

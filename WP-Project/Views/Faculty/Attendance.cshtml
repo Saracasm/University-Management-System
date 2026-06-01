@@ -1,0 +1,66 @@
+@model WP_project.Models.CourseOffering
+
+@{
+    ViewData["Title"] = "Mark Attendance";
+}
+
+<div class="page-header mb-4">
+    <h1 class="mb-2">Mark Attendance</h1>
+    <p class="lead" style="color: var(--text-muted);">@Model.Course.Code - @Model.Course.Title</p>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<a asp-action="Index" class="btn btn-secondary mb-4">Back to Courses</a>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="SubmitAttendance" method="post">
+            <input type="hidden" name="courseOfferingId" value="@Model.CourseOfferingId" />
+            
+            <div class="row mb-4 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" value="@ViewBag.Date" class="form-control" required />
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Save Attendance</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Student Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model.Enrollments.Select(e => e.Student))
+                        {
+                            <tr>
+                                <td class="align-middle">@student.RollNumber</td>
+                                <td class="align-middle">@student.Name</td>
+                                <td class="align-middle">
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check" name="status[@student.StudentId]" id="p_@student.StudentId" value="true" checked autocomplete="off">
+                                        <label class="btn btn-outline-success" for="p_@student.StudentId">Present</label>
+
+                                        <input type="radio" class="btn-check" name="status[@student.StudentId]" id="a_@student.StudentId" value="false" autocomplete="off">
+                                        <label class="btn btn-outline-danger" for="a_@student.StudentId">Absent</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+
