@@ -7,10 +7,28 @@
 *.userosscache
 *.sln.docstates
 
-## Local PostgreSQL Environment
+## Build & publish output
+publish/
+*.pubxml
+
+## Secrets & local config
+appsettings.Local.json
+*.env
+
+## Local PostgreSQL / setup artifacts
 pgsql/
 postgresql-binaries.zip
+*.ps1
 
-## Redundant Duplicates
+## Redundant duplicates
 wp/
 wp.zip
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Reports / binary docs
+*.doc
+*.docx
+*.pdf
